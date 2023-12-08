@@ -58,3 +58,28 @@ This time span should be restricted to the time span of the relative production.
 * The performance object will have to include a showtime member.
 
 
+## 2023-12-08
+* There are touring productions for which there is no constant venue
+
+** Cast/Crew Dates **
+There is somewhat a problem for associating cast and crew with productions. I thought using a timespan would be easier 
+than individual dates. It is easier to enter that information because you don't need to make an individual record of 
+each performance. However, in the cases where an agent (cast/crew) are associated with a production for many disjointed 
+performances, this can be effectively the same models as associating them with individual performances. Additionally, 
+a cast/crew might be associated with a performance which is in the middle of a span of performances associated with 
+another agent. We could split the latter agents' associations into two or more spans, which in the worst case would be a
+checkerboard of one agent alternating with the other.
+
+I think that including the time span of association is better than individual performances. Although it would be more 
+accurate to associate agents with individual performances (which are themselves associated with time/date), it is more 
+economical to use time spans. Furthermore, the historical records for these associations are incomplete on average, 
+and I imagine commonly nonexistent. So timespans will work for now.
+
+If at a later date there is a need for cast/crew to be associated with individual performances, maybe there can be a 
+more sparse cast/crew table tied to a performance. This would be useful to highlight some notable special guest star or 
+an understudy performing.
+
+Reviews however, should continue to be associated with individual performances, which, again, need to be associated with
+a date and time.
+
+

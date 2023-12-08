@@ -8,8 +8,6 @@ class Agent(models.Model):
     date_of_birth = models.DateField(default="1899-01-01")
     date_of_death = models.DateField(blank=True, null=True)
 
-    def validate_dates(self):
-        return self.date_of_birth <= self.date_of_death
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -25,7 +23,7 @@ class Venue(models.Model):
 
 class Show(models.Model):
     title = models.CharField(max_length=128)
-    year = models.DateField(verbose_name="Initial Run")
+    year = models.DateField(verbose_name="Year of Initial Run")
     # add image
     # image = models.ImageField()
 
@@ -34,7 +32,8 @@ class Show(models.Model):
 
 
 class Production(models.Model):
-    preview_dates = models.DateField(verbose_name="previews date", blank=True, null=True)
+    # there aren't always previews
+    preview_start_date = models.DateField(verbose_name="previews date", blank=True, null=True)
     start_date = models.DateField(verbose_name="opening date")
     end_date = models.DateField(verbose_name="closing date", blank=True, null=True)  # can be null
     show = models.ForeignKey(Show, on_delete=models.CASCADE)
@@ -45,11 +44,11 @@ class Production(models.Model):
 
 
 class Performance(models.Model):
-    performance_date = models.DateField(verbose_name="performance date")
+    performance_datetime = models.DateTimeField(verbose_name="performance date")
     production = models.ForeignKey(Production, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.production}: {self.performance_date}"
+        return f"{self.production}: {self.performance_datetime}"
 
 class Star(models.Model):
     star = models.IntegerField()
@@ -83,8 +82,18 @@ class CastCrew(models.Model):
     agent = models.ForeignKey(Agent, on_delete=models.CASCADE, related_name="agent")
     show = models.ForeignKey(Show, on_delete=models.CASCADE, related_name="show")
     production = models.ForeignKey(Production, on_delete=models.CASCADE, related_name="production", null=True)
-    performance = models.ForeignKey(Performance, on_delete=models.CASCADE, related_name="performance", null=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
     role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True, related_name="role")
 
     def __str__(self):
         return f"{self.agent}-{self.show}"
+
+    def validate_dates(self):
+        """
+        This should check that the cast/crew association with the production contains valid performance dates
+
+        :return:
+        """
+        # look up the performances
+        ...
