@@ -86,6 +86,13 @@ class CastCrew(models.Model):
     end_date = models.DateField()
     role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True, related_name="role")
 
+    CASTCREW_CHOICES = [
+        ('cast', 'Cast'),
+        ('crew', 'Crew'),
+    ]
+
+    role_type = models.CharField(max_length=10, choices=CASTCREW_CHOICES)
+
     def __str__(self):
         return f"{self.agent}-{self.show}"
 
