@@ -77,21 +77,21 @@ class Role(models.Model):
     def __str__(self):
         return self.name.title()
 
+class Character(models.Model):
+    name = models.CharField(max_length=64)
 
-class CastCrew(models.Model):
+    def __str__(self):
+        return self.name.title()
+
+
+class Crew(models.Model):
     agent = models.ForeignKey(Agent, on_delete=models.CASCADE, related_name="agent")
     show = models.ForeignKey(Show, on_delete=models.CASCADE, related_name="show")
     production = models.ForeignKey(Production, on_delete=models.CASCADE, related_name="production", null=True)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
     role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True, related_name="role")
 
-    CASTCREW_CHOICES = [
-        ('cast', 'Cast'),
-        ('crew', 'Crew'),
-    ]
-
-    role_type = models.CharField(max_length=10, choices=CASTCREW_CHOICES)
 
     def __str__(self):
         return f"{self.agent}-{self.show}"
@@ -104,3 +104,15 @@ class CastCrew(models.Model):
         """
         # look up the performances
         ...
+
+class Cast(models.Model):
+    agent = models.ForeignKey(
+        Crew, on_delete=models.CASCADE
+    )
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    character = models.ForeignKey(
+        Character, on_delete=models.CASCADE,
+        blank=True, null=True, related_name="character")
+    swing = models.BooleanField(default=False)
+    understudy = models.BooleanField(default=False)

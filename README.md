@@ -65,7 +65,7 @@ This time span should be restricted to the time span of the relative production.
 There is somewhat a problem for associating cast and crew with productions. I thought using a timespan would be easier 
 than individual dates. It is easier to enter that information because you don't need to make an individual record of 
 each performance. However, in the cases where an agent (cast/crew) are associated with a production for many disjointed 
-performances, this can be effectively the same models as associating them with individual performances. Additionally, 
+performances, this can be effectively the same model as associating them with individual performances. Additionally, 
 a cast/crew might be associated with a performance which is in the middle of a span of performances associated with 
 another agent. We could split the latter agents' associations into two or more spans, which in the worst case would be a
 checkerboard of one agent alternating with the other.
@@ -82,4 +82,17 @@ an understudy performing.
 Reviews however, should continue to be associated with individual performances, which, again, need to be associated with
 a date and time.
 
+## 2023-12-30
+There should be a separate character table.  
+Cast members should still be included in the cast/crew table; however, there should be an optional field that is the 
+character if the role is "cast member".
+
+There could be "understudy" and "swing" roles that are similar to "cast member". This would create a distinction between
+ these types of performing roles. Although I think it is easier to add some boolean fields to this effect.  
+I will add "swing" & "understudy" boolean fields to the `CastCrew` model.
+
+**Cast Crew Dates**
+I think it makes sense to leave the start and end dates of the performances blank. Upon display I can use the related 
+production start and end dates. This allows more specific dates to be recorded for performers/crew, but is not required 
+if that information is not available.
 

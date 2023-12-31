@@ -4,12 +4,16 @@ from django.contrib import admin
 from .models import (
     Agent, Show, Production,
     Performance, Rating, Star,
-    CastCrew, Venue, Role
+    Crew, Cast, Venue, Role,
+    Character
 )
 
 # Admin classes
-class CastCrewAdmin(admin.ModelAdmin):
+class CrewAdmin(admin.ModelAdmin):
     list_display = ('show', 'agent', 'role')
+
+class CastAdmin(admin.ModelAdmin):
+    list_display = ('agent', 'character', 'swing', 'understudy')
 
 class ProductionAdmin(admin.ModelAdmin):
     ordering = ["show", "start_date"]
@@ -23,10 +27,12 @@ class RoleAdmin(admin.ModelAdmin):
 # registry
 admin.site.register(Agent, AgentAdmin)
 admin.site.register(Show)
-admin.site.register(CastCrew, CastCrewAdmin)
+admin.site.register(Crew, CrewAdmin)
+admin.site.register(Cast, CastAdmin)
 admin.site.register(Production, ProductionAdmin)
 admin.site.register(Performance)
 admin.site.register(Rating)
 admin.site.register(Role, RoleAdmin)
 admin.site.register(Star)
 admin.site.register(Venue)
+admin.site.register(Character)
