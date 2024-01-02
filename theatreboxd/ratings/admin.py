@@ -8,21 +8,27 @@ from .models import (
     Character
 )
 
+
 # Admin classes
 class CrewAdmin(admin.ModelAdmin):
     list_display = ('show', 'agent', 'role')
 
+
 class CastAdmin(admin.ModelAdmin):
     list_display = ('agent', 'character', 'swing', 'understudy')
+
 
 class ProductionAdmin(admin.ModelAdmin):
     ordering = ["show", "start_date"]
 
+
 class AgentAdmin(admin.ModelAdmin):
     ordering = ["last_name", "first_name", "date_of_birth"]
 
+
 class RoleAdmin(admin.ModelAdmin):
     ordering = ["name"]
+
 
 # registry
 admin.site.register(Agent, AgentAdmin)

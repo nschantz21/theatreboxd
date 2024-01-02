@@ -96,3 +96,23 @@ I think it makes sense to leave the start and end dates of the performances blan
 production start and end dates. This allows more specific dates to be recorded for performers/crew, but is not required 
 if that information is not available.
 
+**Ratings Beyond The Performance**  
+This platform is primarily for rating the performance level, e.g. the last performance of the original broadway 
+production of "Cats". However, we could allow the user to rate the actor's acting performance and singing performance.
+The ratings could be semi-hierarchical: Show, Production, Performance (entire cast), Song, Actor.
+
+
+## 2023-12-31
+The data pipeline will be quite important. We really need easy (not necessarily fast) import into the system. 
+Out data pipeline needs are:
+* Accurate
+* Easy
+* Timely - When shows start, the necessary information must be available
+
+You can import the div-based table from the broadway database. However, it still requires some post processing. 
+It's not too bad. Hoewever, any amount of manual data processing is kind of a problem. Ultimately you could rely on the 
+users to provide and process the data. But then the input forms need to be quite good.
+
+
+
+
