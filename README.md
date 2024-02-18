@@ -109,10 +109,16 @@ Out data pipeline needs are:
 * Easy
 * Timely - When shows start, the necessary information must be available
 
-You can import the div-based table from the broadway database. However, it still requires some post processing. 
-It's not too bad. Hoewever, any amount of manual data processing is kind of a problem. Ultimately you could rely on the 
+You can import the div-based table from the broadway database. However, it still requires some post-processing. 
+It's not too bad. However, any amount of manual data processing is kind of a problem. Ultimately you could rely on the 
 users to provide and process the data. But then the input forms need to be quite good.
 
+## 2024-02-17
+I don't know if you need to make this a scheduled set of tasks.  
+This is really just a one time import whenever there is a show. There is no real reason to import historical shows - no 
+one can review them.  
+What **would** be helpful is an automatic way to upload the information from a photo/pdf/csv.  
 
+Also removing anything historical musicals would also remove the need to put in death dates of the people.
 
 
