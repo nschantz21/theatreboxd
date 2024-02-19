@@ -110,15 +110,55 @@ Out data pipeline needs are:
 * Timely - When shows start, the necessary information must be available
 
 You can import the div-based table from the broadway database. However, it still requires some post-processing. 
-It's not too bad. However, any amount of manual data processing is kind of a problem. Ultimately you could rely on the 
+It's not too bad. However, any amount of manual data processing is kind of a problem. Ultimately you could rely on the
 users to provide and process the data. But then the input forms need to be quite good.
 
 ## 2024-02-17
+
 I don't know if you need to make this a scheduled set of tasks.  
-This is really just a one time import whenever there is a show. There is no real reason to import historical shows - no 
+This is really just a one time import whenever there is a show. There is no real reason to import historical shows - no
 one can review them.  
-What **would** be helpful is an automatic way to upload the information from a photo/pdf/csv.  
+What **would** be helpful is an automatic way to upload the information from a photo/pdf/csv.
 
 Also removing anything historical musicals would also remove the need to put in death dates of the people.
+However, going through the motions with one historical musical will show what the possibilities are for this
+information.
 
+The model for cast should be time invariant. It should be very simple.
+
+```python
+class Cast:
+    name: str
+    role: str
+```
+
+There should be default cast members in the input form.
+
+The userflow is
+
+1. select the show
+2. select the date (default today)
+3. was there cast replacement?
+   a. If yes, enter the replacement cast member and role
+   b. if not, use the existing cast
+4. enter your rating
+5. enter your comment
+
+When a permanent cast member changes, the new default changes.
+When the review is logged we take a snapshot of the cast?  
+In this case you are reviewing a performance.   
+A performance has a cast associated with it.  
+A performance has a related production.  
+A production has a default cast, which populates the form to review the performance.
+a cast is associated with a performance. A cast is a collection of performers with roles.
+
+Roles are associated with a show (or production?).
+
+TODO
+
+* finish uploading "Cats" as an exercise in the amount of information that will be uploaded
+* Remove the crew models
+* Create user sign up and log in
+* Set up using PostgresDB
+* Deploy to cloud
 
