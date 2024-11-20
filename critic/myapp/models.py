@@ -11,10 +11,12 @@ class Feedback(models.Model):
 
     name = models.CharField(max_length=100)
     email = models.EmailField()
-    venue = models.CharField(max_length=100)
+    venue = models.CharField(max_length=255)
     artist = models.CharField(max_length=100)
     venue_rating = models.CharField(max_length=1, choices=RATING_CHOICES)  # Dropdown field
     artist_rating = models.CharField(max_length=1, choices=RATING_CHOICES)  # Dropdown field
+    place_id = models.CharField(max_length=100, blank=True, null=True)
+    place_address = models.TextField(blank=True, null=True)
 
     comments = models.TextField()
 

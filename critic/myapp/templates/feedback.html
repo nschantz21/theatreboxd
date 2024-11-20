@@ -2,13 +2,76 @@
 <html>
 <head>
     <title>Feedback Form</title>
+    <style>
+        /* Add some styling for the map */
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initAutocomplete"></script>
+
+    <script>
+        let map, marker;
+
+        function initAutocomplete() {
+            const input = document.getElementById('venue-input');
+            const autocomplete = new google.maps.places.Autocomplete(input, { types:['establishment'],} // Restrict to establishments
+            );
+            
+             // Initialize the map with a default location
+            const defaultLocation = { lat: -34.397, lng: 150.644 }; // Change to your desired default location
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: defaultLocation,
+                zoom: 15,
+            });
+
+            // Initialize the marker (hidden by default)
+            marker = new google.maps.Marker({
+                map: map,
+                position: defaultLocation,
+                visible: false,
+            });
+
+            autocomplete.addListener('place_changed', function() {
+                const place = autocomplete.getPlace();
+                if (!place.geometry || !place.geometry.location) {
+                    alert("No details available for input: '" + input.value + "'");
+                    return;
+                }
+                 // Update the map center and marker position
+                const location = place.geometry.location;
+                map.setCenter(location);
+                map.setZoom(15);
+                // Update the marker position and make it visible
+                marker.setPosition(location);
+                marker.setVisible(true);
+
+                document.getElementById('place-id').value = place.place_id || '';
+                document.getElementById('latitude').value = place.geometry.location.lat() || '';
+                document.getElementById('longitude').value = place.geometry.location.lng() || '';
+                console.log(place);  // You can access the place details here if needed
+            });
+        }
+    </script>
 </head>
-<body>
+
+<body onload="initAutocomplete()">
     <h1>Feedback Form</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
+        <p>
+            <label for="venue">Venue:</label>
+            <input type="text" id="venue-input" name="venue" placeholder="Search for a venue...">
+        </p>
+        <input type="hidden" id="place-id" name="place_id">
+        <input type="hidden" id="latitude" name="latitude">
+        <input type="hidden" id="longitude" name="longitude">
         <button type="submit">Submit</button>
     </form>
+    <!-- Map container -->
+    <div id="map"></div>
 </body>
 </html>
