@@ -16,6 +16,7 @@ class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback
         fields = [
-            'name', 'email', 'comments', 'artist', 'venue',
-            'venue_rating', 'artist_rating'
+            'artist', 'artist_rating', 'venue',
+            'venue_rating', 'date_of_performance',
+            'comments', 
         ]

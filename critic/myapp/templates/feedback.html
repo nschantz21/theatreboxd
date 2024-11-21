@@ -62,10 +62,6 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <!-- <p>
-            <label for="venue">Venue:</label>
-            <input type="text" id="venue-input" name="venue" placeholder="Search for a venue...">
-        </p> -->
         <input type="hidden" id="place-id" name="place_id">
         <input type="hidden" id="latitude" name="latitude">
         <input type="hidden" id="longitude" name="longitude">
