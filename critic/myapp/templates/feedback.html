@@ -62,16 +62,67 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <p>
+        <!-- <p>
             <label for="venue">Venue:</label>
             <input type="text" id="venue-input" name="venue" placeholder="Search for a venue...">
-        </p>
+        </p> -->
         <input type="hidden" id="place-id" name="place_id">
         <input type="hidden" id="latitude" name="latitude">
         <input type="hidden" id="longitude" name="longitude">
+        <!-- Artist autocomplete suggestions -->
+        <ul id="artist-autocomplete" style="display: none; position: absolute; border: 1px solid #ddd; background: #fff; list-style: none; padding: 5px; margin: 0; max-width: 300px;"></ul>
+
         <button type="submit">Submit</button>
     </form>
     <!-- Map container -->
     <div id="map"></div>
+
+    <!-- SPOTIFY SCRIPT -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        const artistInput = $('#id_artist');
+        const autocompleteList = $('#artist-autocomplete');
+    
+        artistInput.on('input', function() {
+            const query = $(this).val();
+    
+            if (query.length > 2) { // Only search when 3+ characters are typed
+                $.ajax({
+                    url: "{% url 'spotify_artist_search' %}",
+                    data: { query: query },
+                    success: function(data) {
+                        const suggestions = data.artists;
+                        autocompleteList.empty(); // Clear previous suggestions
+                        
+                        suggestions.forEach(function(artist) {
+                            autocompleteList.append('<li data-id="' + artist.id + '">' + artist.name + '</li>');
+                        });
+    
+                        autocompleteList.show();
+                    },
+                    error: function() {
+                        console.log("Error fetching artist data.");
+                    }
+                });
+            } else {
+                autocompleteList.hide();
+            }
+        });
+    
+        // Select artist on click
+        $(document).on('click', '#artist-autocomplete li', function() {
+            artistInput.val($(this).text());  // Fill input with the selected artist's name
+            autocompleteList.hide();         // Hide the suggestions list
+        });
+    
+        // Hide the autocomplete list when clicking elsewhere
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('#id_artist, #artist-autocomplete').length) {
+                autocompleteList.hide();
+            }
+        });
+    });
+    </script>
 </body>
 </html>
