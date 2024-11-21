@@ -2,12 +2,20 @@ from django import forms
 from .models import Feedback
 
 class FeedbackForm(forms.ModelForm):
+    artist = forms.CharField(
+        max_length=255, 
+        required=False, 
+        widget=forms.TextInput(attrs={'id': 'id_artist', 'placeholder': 'Search for an artist...'})
+    )
+    venue = forms.CharField(
+        max_length=255, 
+        required=False, 
+        widget=forms.TextInput(attrs={'id': 'venue-input', 'placeholder': 'Search for a venue...'})
+    )
+
     class Meta:
         model = Feedback
         fields = [
-            'name', 'email', 'comments', 'artist',
+            'name', 'email', 'comments', 'artist', 'venue',
             'venue_rating', 'artist_rating'
         ]
-        widgets = {
-            'venue': forms.TextInput(attrs={'id': 'venue-input'}),
-        }
