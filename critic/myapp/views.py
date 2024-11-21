@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from .forms import FeedbackForm
 
 
+@login_required
 def feedback_view(request):
     context = {'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY}
 
