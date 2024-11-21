@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Welcome, {{ user.username }}</h1>
+    <p>Email: {{ user.email }}</p>
+
+    <h2>Your Reviews</h2>
+    {% if feedback_list %}
+        <ul class="list-group">
+            {% for feedback in feedback_list %}
+                <li class="list-group-item">
+                    <strong>Performance:</strong> {{ feedback.artist }}<br>
+                    <strong>Rating:</strong> {{ feedback.rating }}/5<br>
+                    <strong>Date of Performance:</strong> {{ feedback.date_of_performance }}<br>
+                    <strong>Feedback:</strong> {{ feedback.feedback }}<br>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You haven't submitted any reviews yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+<div class="pagination">
+    <span class="step-links">
+        {% if feedback_list.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ feedback_list.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ feedback_list.number }} of {{ feedback_list.paginator.num_pages }}.
+        </span>
+
+        {% if feedback_list.has_next %}
+            <a href="?page={{ feedback_list.next_page_number }}">next</a>
+            <a href="?page={{ feedback_list.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>

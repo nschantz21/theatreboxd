@@ -1,0 +1,12 @@
+body {
+    background-color: #f8f9fa; /* Light background */
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+footer {
+    margin-top: 20px;
+    color: #6c757d;
+}
