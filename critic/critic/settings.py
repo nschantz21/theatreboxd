@@ -14,6 +14,11 @@ from pathlib import Path
 import os
 import base64
 
+from dotenv import load_dotenv
+
+load_dotenv()  # take environment variables from .env.
+
+
 # Spotify API Credentials
 SPOTIFY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
 SPOTIFY_CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
@@ -42,8 +47,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGIN_URL = '/login/'
+# Redirects
+LOGIN_URL = 'accounts/login/'
 LOGIN_REDIRECT_URL = '/myapp/profile/'  # Or the URL pattern for your profile view
+# settings.py
+LOGOUT_REDIRECT_URL = '/accounts/login/'  # Replace with the actual URL of your login page
 
 
 
@@ -137,7 +145,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [BASE_DIR / "critic/static"]
 
 
 # Default primary key field type
