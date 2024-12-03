@@ -1,104 +1,89 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Feedback Form</title>
-    <style>
-        /* Add some styling for the map */
-        #map {
-            height: 400px;
-            width: 30%;
-            margin-top: 20px;
-        }
-    </style>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initAutocomplete"></script>
+{% extends 'base.html' %}
 
-    <script>
-        let map, marker;
+{% block title %}Feedback Form{% endblock %}
 
-        function initAutocomplete() {
-            const input = document.getElementById('venue-input');
-            const autocomplete = new google.maps.places.Autocomplete(input, { types:['establishment'],} // Restrict to establishments
-            );
-            
-            // Initialize the map with a default location
-            // times square starting point
-            const defaultLocation = { lat: 40.758062241046076, lng: -73.98554172308262 };
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: defaultLocation,
-                zoom: 15,
-            });
+{% block extra_head %}
+<script>
+    let map, marker;
 
-            // Initialize the marker (hidden by default)
-            marker = new google.maps.Marker({
-                map: map,
-                position: defaultLocation,
-                visible: false,
-            });
+    function initAutocomplete() {
+        const input = document.getElementById('venue-input');
+        const autocomplete = new google.maps.places.Autocomplete(input, { types: ['establishment'] });
 
-            autocomplete.addListener('place_changed', function() {
-                const place = autocomplete.getPlace();
-                if (!place.geometry || !place.geometry.location) {
-                    alert("No details available for input: '" + input.value + "'");
-                    return;
-                }
-                 // Update the map center and marker position
-                const location = place.geometry.location;
-                map.setCenter(location);
-                map.setZoom(15);
-                // Update the marker position and make it visible
-                marker.setPosition(location);
-                marker.setVisible(true);
+        const defaultLocation = { lat: 40.758062241046076, lng: -73.98554172308262 };
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: defaultLocation,
+            zoom: 15,
+        });
 
-                document.getElementById('place-id').value = place.place_id || '';
-                document.getElementById('latitude').value = place.geometry.location.lat() || '';
-                document.getElementById('longitude').value = place.geometry.location.lng() || '';
-                console.log(place);  // You can access the place details here if needed
-            });
-        }
-    </script>
-</head>
+        marker = new google.maps.Marker({
+            map: map,
+            position: defaultLocation,
+            visible: false,
+        });
 
-<body onload="initAutocomplete()">
-    <h1>Feedback Form</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="hidden" id="place-id" name="place_id">
-        <input type="hidden" id="latitude" name="latitude">
-        <input type="hidden" id="longitude" name="longitude">
-        <!-- Artist autocomplete suggestions -->
-        <ul id="artist-autocomplete" style="display: none; position: absolute; border: 1px solid #ddd; background: #fff; list-style: none; padding: 5px; margin: 0; max-width: 300px;"></ul>
+        autocomplete.addListener('place_changed', function () {
+            const place = autocomplete.getPlace();
+            if (!place.geometry || !place.geometry.location) {
+                alert("No details available for input: '" + input.value + "'");
+                return;
+            }
 
-        <button type="submit">Submit</button>
-    </form>
-    <!-- Map container -->
-    <div id="map"></div>
+            const location = place.geometry.location;
+            map.setCenter(location);
+            map.setZoom(15);
+            marker.setPosition(location);
+            marker.setVisible(true);
 
-    <!-- SPOTIFY SCRIPT -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-    $(document).ready(function() {
+            document.getElementById('place-id').value = place.place_id || '';
+            document.getElementById('latitude').value = place.geometry.location.lat() || '';
+            document.getElementById('longitude').value = place.geometry.location.lng() || '';
+        });
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<h1>Feedback Form</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" id="place-id" name="place_id">
+    <input type="hidden" id="latitude" name="latitude">
+    <input type="hidden" id="longitude" name="longitude">
+    <!-- Artist autocomplete suggestions -->
+    <ul id="artist-autocomplete" style="display: none; position: absolute; border: 1px solid #ddd; background: #fff; list-style: none; padding: 5px; margin: 0; max-width: 300px;"></ul>
+
+    <button type="submit">Submit</button>
+</form>
+<!-- Map container -->
+<div id="map"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
         const artistInput = $('#id_artist');
         const autocompleteList = $('#artist-autocomplete');
-    
-        artistInput.on('input', function() {
+
+        artistInput.on('input', function () {
             const query = $(this).val();
-    
-            if (query.length > 2) { // Only search when 3+ characters are typed
+
+            if (query.length > 2) {
                 $.ajax({
                     url: "{% url 'spotify_artist_search' %}",
                     data: { query: query },
-                    success: function(data) {
+                    success: function (data) {
                         const suggestions = data.artists;
-                        autocompleteList.empty(); // Clear previous suggestions
-                        
-                        suggestions.forEach(function(artist) {
+                        autocompleteList.empty();
+
+                        suggestions.forEach(function (artist) {
                             autocompleteList.append('<li data-id="' + artist.id + '">' + artist.name + '</li>');
                         });
-    
+
                         autocompleteList.show();
                     },
-                    error: function() {
+                    error: function () {
                         console.log("Error fetching artist data.");
                     }
                 });
@@ -106,20 +91,17 @@
                 autocompleteList.hide();
             }
         });
-    
-        // Select artist on click
-        $(document).on('click', '#artist-autocomplete li', function() {
-            artistInput.val($(this).text());  // Fill input with the selected artist's name
-            autocompleteList.hide();         // Hide the suggestions list
+
+        $(document).on('click', '#artist-autocomplete li', function () {
+            artistInput.val($(this).text());
+            autocompleteList.hide();
         });
-    
-        // Hide the autocomplete list when clicking elsewhere
-        $(document).on('click', function(e) {
+
+        $(document).on('click', function (e) {
             if (!$(e.target).closest('#id_artist, #artist-autocomplete').length) {
                 autocompleteList.hide();
             }
         });
     });
-    </script>
-</body>
-</html>
+</script>
+{% endblock %}
