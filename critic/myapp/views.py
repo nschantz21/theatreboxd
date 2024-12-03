@@ -1,3 +1,5 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
@@ -5,6 +7,7 @@ from .forms import FeedbackForm
 import requests
 from django.http import JsonResponse
 from django.core.paginator import Paginator
+from django.views.generic import ListView
 
 def get_spotify_token():
     url = "https://accounts.spotify.com/api/token"
@@ -73,4 +76,28 @@ def profile_view(request):
         'feedback_list': page_feedback,
     }
     return render(request, 'profile.html', context)
+
+
+class VenueFeedbackListView(ListView):
+    model = Feedback
+    template_name = 'venue_feedback_list.html'  # custom template
+    context_object_name = 'feedback_list'  # name for the feedback list in the template
+    paginate_by = 10
+
+    def get_queryset(self):
+        venue = self.kwargs.get('venue')
+        return Feedback.objects.filter(venue__iexact=venue)
+
+
+class ArtistFeedbackListView(ListView):
+    model = Feedback
+    template_name = 'artist_feedback_list.html'
+    context_object_name = 'feedback_list'
+    paginate_by = 10
+
+    def get_queryset(self) -> QuerySet[Any]:
+        artist = self.kwargs.get('artist')
+        return Feedback.objects.filter(artist__iexact=artist)
+
+
 

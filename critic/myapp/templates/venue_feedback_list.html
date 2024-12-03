@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Feedback for {{ view.kwargs.venue }}{% endblock %}
+
+{% block content %}
+
+<h1>Feedback for Venue: {{ view.kwargs.venue }}</h1>
+<ul>
+    {% for feedback in feedback_list %}
+    <li>
+        <strong>Artist:</strong> {{ feedback.artist }}<br>
+        <strong>Venue Rating:</strong> {{ feedback.venue_rating }}<br>
+        <strong>Artist Rating:</strong> {{ feedback.artist }}<br>
+        <strong>Date of Performance:</strong> {{ feedback.date_of_performance }}<br>
+        <strong>Comments:</strong> {{ feedback.comments|default:"No comments provided" }}
+    </li>
+    <hr>
+    {% empty %}
+        <p>No feedback available for this venue</p>
+    {% endfor %}
+</ul>
+<div class="pagination">
+    {% if feedback_list.has_previous %}
+        <a href="?page={{ feedback_list.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    <span>Page {{ feedback_list.number }} of {{ feedback_list.paginator.num_pages }}</span>
+
+    {% if feedback_list.has_next %}
+        <a href="?page={{ feedback_list.next_page_number }}">Next</a>
+    {% endif %}
+</div>
+
+{% endblock %}
+
