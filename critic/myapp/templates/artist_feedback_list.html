@@ -4,6 +4,13 @@
 
 {% block content %}
 <h1>Feedback for Artist: {{ view.kwargs.artist }}</h1>
+
+<!-- Additional Artist Information -->
+<div>
+    <p><strong>Average Rating:</strong> {{ avg_rating }} </p>
+    <p><strong>Number of Ratings:</strong> {{ num_ratings }} </p>
+</div>
+
 <ul>
     {% for feedback in feedback_list %}
         <li>

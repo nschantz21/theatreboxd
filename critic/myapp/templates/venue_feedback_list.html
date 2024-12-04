@@ -5,6 +5,17 @@
 {% block content %}
 
 <h1>Feedback for Venue: {{ view.kwargs.venue }}</h1>
+
+<!-- Additional Artist Information -->
+<div>
+    <p><strong>Description:</strong> {{ venue_name }} </p>
+    <p><strong>Average Rating:</strong> {{ avg_rating }} </p>
+    <p><strong>Number of Ratings:</strong> {{ num_ratings }} </p>
+</div>
+
+<!-- Google Maps Widget -->
+<div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+
 <ul>
     {% for feedback in feedback_list %}
     <li>
@@ -19,6 +30,25 @@
         <p>No feedback available for this venue</p>
     {% endfor %}
 </ul>
+
+<!-- Initialize Google Maps -->
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap">
+</script>
+<script>
+    function initMap() {
+        const location = { lat: 40.7580, lng: -73.9855 }; // Replace with actual latitude/longitude
+        const map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: location,
+        });
+        const marker = new google.maps.Marker({
+            position: location,
+            map: map,
+        });
+    }
+</script>
+
 <div class="pagination">
     {% if feedback_list.has_previous %}
         <a href="?page={{ feedback_list.previous_page_number }}">Previous</a>

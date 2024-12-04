@@ -1,5 +1,6 @@
 from typing import Any
 from django.db.models.query import QuerySet
+from django.db.models import Avg, Count
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
@@ -87,6 +88,22 @@ class VenueFeedbackListView(ListView):
     def get_queryset(self):
         venue = self.kwargs.get('venue')
         return Feedback.objects.filter(venue__iexact=venue)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        venue = self.kwargs.get('venue')
+
+        # aggregate avg rating and number of ratings
+        feedback_stats = Feedback.objects.filter(venue__iexact=venue).aggregate(
+            avg_rating=Avg('venue_rating'),
+            num_ratings=Count('venue_rating')
+        )
+
+        # add additional context
+        context['venue_name'] = venue
+        context['avg_rating'] = feedback_stats['avg_rating']
+        context['num_ratings'] = feedback_stats['num_ratings']
+        return context
 
 
 class ArtistFeedbackListView(ListView):
@@ -99,5 +116,20 @@ class ArtistFeedbackListView(ListView):
         artist = self.kwargs.get('artist')
         return Feedback.objects.filter(artist__iexact=artist)
 
+   
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        artist = self.kwargs.get('artist')
 
+        # aggregate avg rating and number of ratings
+        feedback_stats = Feedback.objects.filter(artist__iexact=artist).aggregate(
+            avg_rating=Avg('artist_rating'),
+            num_ratings=Count('artist_rating')
+        )
+
+        # add additional context
+        context['avg_rating'] = feedback_stats['avg_rating']
+        context['num_ratings'] = feedback_stats['num_ratings']
+
+        return context
 
