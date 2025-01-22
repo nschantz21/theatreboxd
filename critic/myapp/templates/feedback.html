@@ -7,10 +7,10 @@
     let map, marker;
 
     function initAutocomplete() {
-        const input = document.getElementById('venue-input');
+        const input = document.getElementById('venue-name');
         const autocomplete = new google.maps.places.Autocomplete(input, { types: ['establishment'] });
 
-        const defaultLocation = { lat: 40.758062241046076, lng: -73.98554172308262 };
+        const defaultLocation = { lat: 41.758062241046076, lng: -73.98554172308262 };
         map = new google.maps.Map(document.getElementById('map'), {
             center: defaultLocation,
             zoom: 15,
@@ -47,17 +47,35 @@
 <h1>Feedback Form</h1>
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    <!-- If your form still has other fields from Feedback model, render them here -->
+    <p>{{ form.date_of_performance.label_tag }} {{ form.date_of_performance }}</p>
+    <p>{{ form.venue_rating.label_tag }} {{ form.venue_rating }}</p>
+    <p>{{ form.artist_rating.label_tag }} {{ form.artist_rating }}</p>
+    <p>{{ form.comments.label_tag }} {{ form.comments }}</p>
+
+    
+    <!-- Venue Field -->
+    <label for="venue-name">Venue:</label>
+    <input type="text" id="venue-name" name="venue_name" placeholder="Search for a venue...">
     <input type="hidden" id="place-id" name="place_id">
     <input type="hidden" id="latitude" name="latitude">
     <input type="hidden" id="longitude" name="longitude">
+
+    <!-- Artist Field -->
+    <label for="artist-name">Artist:</label>
+    <input type="text" id="artist-name" name="artist_name" placeholder="Search for an artist...">
+
+
+
     <!-- Artist autocomplete suggestions -->
-    <ul id="artist-autocomplete" style="display: none; position: absolute; border: 1px solid #ddd; background: #fff; list-style: none; padding: 5px; margin: 0; max-width: 300px;"></ul>
+    <ul id="artist-autocomplete"
+        style="display: none; position: absolute; border: 1px solid #ddd; background: #fff; list-style: none; padding: 5px; margin: 0; max-width: 300px;">
+    </ul>
 
     <button type="submit">Submit</button>
 </form>
 <!-- Map container -->
-<div id="map"></div>
+<div id="map" style="height: 400px; width: 30%; margin-top: 20px;"></div>
 {% endblock %}
 
 {% block extra_js %}
