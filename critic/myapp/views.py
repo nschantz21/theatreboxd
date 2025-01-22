@@ -9,6 +9,7 @@ import requests
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.views.generic import ListView
+from .models import Feedback, Venue, Artist
 
 def get_spotify_token():
     url = "https://accounts.spotify.com/api/token"
@@ -43,12 +44,45 @@ def spotify_artist_search(request):
 def feedback_view(request):
     context = {'google_maps_api_key': settings.GOOGLE_MAPS_API_KEY}
     if request.method == 'POST':
+        print("POST data:", request.POST)
         form = FeedbackForm(request.POST)
+        print("Form Initialized")
         if form.is_valid():
+            print("form was valid")
+            print("Cleaned data: ", form.cleaned_data)
+            artist_name = form.cleaned_data['artist']
+
+            venue_name = request.POST.get('venue_name')
+            place_id = request.POST.get('place_id')
+            latitude = request.POST.get('latitude')
+            longitude = request.POST.get('longitude')
+
+            venue, created_venue = Venue.objects.get_or_create(
+                name=venue_name,
+                defaults={
+                    'place_id': place_id,
+                    'latitude': latitude,
+                    'longitude': longitude
+                }
+            )
+
+            if not created_venue and (latitude and longitude and place_id):
+                venue.place_id = place_id
+                venue.latitude = latitude
+                venue.longitude = longitude
+                venue.save()
+            
+            # get or create the artist
+            artist, created_artist = Artist.objects.get_or_create(name=artist_name)
+
             feedback = form.save(commit=False)
             feedback.user = request.user  # Associate the logged-in user with the feedback
+            feedback.venue = venue
+            feedback.artist = artist
             feedback.save()
             return redirect('thank_you')  # Replace with your success URL
+        else:
+            print("Form errors:", form.errors)
     else:
         form = FeedbackForm()
 
