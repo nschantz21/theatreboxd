@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 import base64
+import io
+from urllib.parse import urlparse
 
 import environ
 from google.cloud import secretmanager
